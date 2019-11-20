@@ -2,7 +2,7 @@
 
 import pytest
 
-from oca_github_bot.webhooks import on_pr_green_label_needs_review
+from orca_bot.webhooks import on_pr_green_label_needs_review
 
 from .common import EventMock
 
@@ -10,7 +10,7 @@ from .common import EventMock
 @pytest.mark.asyncio
 async def test_on_pr_green_label_needs_review(mocker):
     mocker.patch(
-        "oca_github_bot.webhooks.on_pr_green_label_needs_review.tag_needs_review.delay"
+        "orca_bot.webhooks.on_pr_green_label_needs_review.tag_needs_review.delay"
     )
     event = EventMock(
         data={

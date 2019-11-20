@@ -3,7 +3,7 @@ import pytest
 import requests
 from github3.exceptions import ForbiddenError
 
-from oca_github_bot.github import gh_call
+from orca_bot.github import gh_call
 
 
 def _fail_just_like_that():

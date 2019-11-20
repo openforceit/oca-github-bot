@@ -1,5 +1,5 @@
 FROM ubuntu:18.04
-LABEL maintainer="Odoo Community Association (OCA)"
+LABEL maintainer="devops@openforce.it"
 
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \
@@ -35,7 +35,7 @@ RUN set -x \
 RUN python3 -m venv /app
 ENV PATH=/app/bin:$PATH
 
-# install oca_github_bot app
+# install orco_bot app
 RUN mkdir /app/tmp
 COPY ./requirements.txt /app/tmp
 RUN pip install --no-cache-dir -r /app/tmp/requirements.txt

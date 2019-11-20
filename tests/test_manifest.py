@@ -5,8 +5,8 @@ import subprocess
 
 import pytest
 
-from oca_github_bot.github import git_get_head_sha
-from oca_github_bot.manifest import (
+from orca_bot.github import git_get_head_sha
+from orca_bot.manifest import (
     NoManifestFound,
     OdooSeriesNotDetected,
     bump_manifest_version,

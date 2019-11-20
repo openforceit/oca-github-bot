@@ -3,7 +3,7 @@
 
 import pytest
 
-from oca_github_bot.webhooks import on_command
+from orca_bot.webhooks import on_command
 
 from .common import EventMock
 
@@ -18,7 +18,7 @@ def create_test_data(pr, user, body):
 
 @pytest.mark.asyncio
 async def test_on_command_no_pr(mocker):
-    mocker.patch("oca_github_bot.webhooks.on_command.parse_commands")
+    mocker.patch("orca_bot.webhooks.on_command.parse_commands")
 
     data = create_test_data(False, "test-user", "/ocabot merge")
     event = EventMock(data)
@@ -29,7 +29,7 @@ async def test_on_command_no_pr(mocker):
 @pytest.mark.asyncio
 async def test_on_command_valid_pr(mocker):
     cmd_mock = mocker.Mock()
-    mocker.patch("oca_github_bot.webhooks.on_command.parse_commands").return_value = [
+    mocker.patch("orca_bot.webhooks.on_command.parse_commands").return_value = [
         cmd_mock
     ]
 

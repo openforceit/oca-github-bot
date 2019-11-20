@@ -9,12 +9,12 @@ with io.open(os.path.join(here, "README.rst"), encoding="utf-8") as f:
 
 
 setup(
-    name="oca-github-bot",
+    name="orco-bot",
     use_scm_version=True,
     long_description=long_description,
-    author="Odoo Community Association (OCA)",
-    author_email="info@odoo-community.org",
-    url="https://github.com/OCA/oca-github-bot",
+    author="Openforce",
+    author_email="devops@openforce.it",
+    url="https://github.com/openforceit/orco-bot",
     python_requires=">=3.6",
     setup_requires=["setuptools_scm"],
     packages=find_packages("src"),

@@ -3,8 +3,8 @@
 
 import pytest
 
-from oca_github_bot.version_branch import make_merge_bot_branch
-from oca_github_bot.webhooks import on_status_merge_bot
+from orca_bot.version_branch import make_merge_bot_branch
+from orca_bot.webhooks import on_status_merge_bot
 
 from .common import EventMock
 
@@ -23,7 +23,7 @@ def create_test_data(branch, status, conclusion, sha=None):
 
 
 def mock_merge_bot_functions(mocker):
-    mocker.patch("oca_github_bot.webhooks.on_status_merge_bot.merge_bot_status.delay")
+    mocker.patch("orca_bot.webhooks.on_status_merge_bot.merge_bot_status.delay")
 
 
 @pytest.mark.asyncio

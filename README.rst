@@ -1,6 +1,17 @@
-##############
-OCA GitHub bot
-##############
+########
+ORCO BOT
+########
+
+This is the Openforce fork of OCA Github Bot.
+See: https://github.com/OCA/oca-github-bot
+
+The original README follows, but be aware of these changes:
+
+* all occurences of ``oca_github_bot`` replaced with ``orco_bot``:
+
+
+---------------------------------------------------------------------------
+
 
 The goal of this project is to collect in one place:
 
@@ -89,16 +100,16 @@ Developing new features
 
 The easiest is to look at examples.
 
-New webhooks are added in the `webhooks <./src/oca_github_bot/webhooks>`_ directory.
+New webhooks are added in the `webhooks <./src/orco_bot/webhooks>`_ directory.
 Webhooks execution time must be very short and they should
 delegate the bulk of their work as delayed tasks, which have
 the benefit of not overloading the machine and having proper
 error handling and monitoring.
 
-Tasks are in the `tasks <./src/oca_github_bot/tasks>`_ directory. They are `Celery tasks
+Tasks are in the `tasks <./src/orco_bot/tasks>`_ directory. They are `Celery tasks
 <http://docs.celeryproject.org/en/latest/userguide/tasks.html>`_.
 
-Tasks can be scheduled, in `cron.py <./src/oca_github_bot/cron.py>`_, using the `Celery periodic tasks
+Tasks can be scheduled, in `cron.py <./src/orco_bot/cron.py>`_, using the `Celery periodic tasks
 <http://docs.celeryproject.org/en/latest/userguide/periodic-tasks.html>`_ mechanism.
 
 Running it
@@ -173,8 +184,8 @@ Here is a recommended procedure to test locally:
 
 * Then you can debug the two processes in your favorite IDE:
 
-  - the webhook server: ``python -m oca_github_bot``
-  - the task worker: ``python -m celery worker --app=oca_github_bot.queue.app --pool=solo --loglevel=INFO``
+  - the webhook server: ``python -m orco_bot``
+  - the task worker: ``python -m celery worker --app=orco_bot.queue.app --pool=solo --loglevel=INFO``
 
 * To expose the webhook server on your local machine to internet,
   you can use `ngrok <https://ngrok.com/>`_

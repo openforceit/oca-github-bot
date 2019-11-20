@@ -6,7 +6,7 @@ import subprocess
 import pytest
 from celery.exceptions import Retry
 
-from oca_github_bot.github import git_push_if_needed
+from orca_bot.github import git_push_if_needed
 
 
 def test_git_push_if_needed(git_clone):

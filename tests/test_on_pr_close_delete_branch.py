@@ -3,7 +3,7 @@
 
 import pytest
 
-from oca_github_bot.webhooks import on_pr_close_delete_branch
+from orca_bot.webhooks import on_pr_close_delete_branch
 
 from .common import EventMock
 
@@ -11,7 +11,7 @@ from .common import EventMock
 @pytest.mark.asyncio
 async def test_on_pr_close_delete_branch(mocker):
     mocker.patch(
-        "oca_github_bot.webhooks.on_pr_close_delete_branch.delete_branch.delay"
+        "orca_bot.webhooks.on_pr_close_delete_branch.delete_branch.delay"
     )
     event = EventMock(
         data={

@@ -6,7 +6,7 @@ import subprocess
 import github3
 import pytest
 
-from oca_github_bot import config
+from orca_bot import config
 
 
 @pytest.fixture

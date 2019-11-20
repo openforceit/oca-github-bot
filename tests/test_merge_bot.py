@@ -5,7 +5,7 @@ import subprocess
 
 import pytest
 
-from oca_github_bot.tasks.merge_bot import _user_can_merge
+from orca_bot.tasks.merge_bot import _user_can_merge
 
 from .common import commit_addon, make_addon
 
