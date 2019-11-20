@@ -12,7 +12,7 @@ from orca_bot.commands import (
 
 def test_parse_command_not_a_command():
     with pytest.raises(InvalidCommandError):
-        list(parse_commands("/ocabot not_a_command"))
+        list(parse_commands("/orcobot not_a_command"))
 
 
 def test_parse_command_multi():
@@ -20,15 +20,15 @@ def test_parse_command_multi():
         parse_commands(
             """
                 ...
-                /ocabot merge major
-                /ocabot   merge   patch
-                /ocabot merge patch
-                /ocabot merge, please
-                /ocabot merge  minor, please
-                /ocabot merge minor, please
-                /ocabot merge.
-                /ocabot merge patch. blah
-                /ocabot merge minor # ignored
+                /orcobot merge major
+                /orcobot   merge   patch
+                /orcobot merge patch
+                /orcobot merge, please
+                /orcobot merge  minor, please
+                /orcobot merge minor, please
+                /orcobot merge.
+                /orcobot merge patch. blah
+                /orcobot merge minor # ignored
                 ...
             """
         )
@@ -50,7 +50,7 @@ def test_parse_command_2():
     cmds = list(
         parse_commands(
             "Great contribution, thanks!\r\n\r\n"
-            "/ocabot merge\r\n\r\n"
+            "/orcobot merge\r\n\r\n"
             "Please forward port it to 12.0."
         )
     )
@@ -58,24 +58,24 @@ def test_parse_command_2():
 
 
 def test_parse_command_merge():
-    cmds = list(parse_commands("/ocabot merge major"))
+    cmds = list(parse_commands("/orcobot merge major"))
     assert len(cmds) == 1
     assert cmds[0].name == "merge"
     assert cmds[0].bumpversion == "major"
-    cmds = list(parse_commands("/ocabot merge minor"))
+    cmds = list(parse_commands("/orcobot merge minor"))
     assert len(cmds) == 1
     assert cmds[0].name == "merge"
     assert cmds[0].bumpversion == "minor"
-    cmds = list(parse_commands("/ocabot merge patch"))
+    cmds = list(parse_commands("/orcobot merge patch"))
     assert len(cmds) == 1
     assert cmds[0].name == "merge"
     assert cmds[0].bumpversion == "patch"
-    cmds = list(parse_commands("/ocabot merge"))
+    cmds = list(parse_commands("/orcobot merge"))
     assert len(cmds) == 1
     assert cmds[0].name == "merge"
     assert cmds[0].bumpversion is None
     with pytest.raises(InvalidOptionsError):
-        list(parse_commands("/ocabot merge brol"))
+        list(parse_commands("/orcobot merge brol"))
 
 
 def test_parse_command_comment():
@@ -85,7 +85,7 @@ def test_parse_command_comment():
 >> Double comment! {merge_command}
 This is the one {merge_command} patch
     """.format(
-        merge_command="/ocabot merge"
+        merge_command="/orcobot merge"
     )
     command = list(parse_commands(body))
     assert len(command) == 1

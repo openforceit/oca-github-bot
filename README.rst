@@ -8,6 +8,7 @@ See: https://github.com/OCA/oca-github-bot
 The original README follows, but be aware of these changes:
 
 * all occurences of ``oca_github_bot`` replaced with ``orco_bot``:
+* all occurences of ``ocabot`` replaced with ``orcobot``
 
 
 ---------------------------------------------------------------------------
@@ -78,7 +79,7 @@ Commands
 One can ask the bot to perform some tasks by entering special commands
 as merge request comments.
 
-``/ocabot merge`` optionally followed by one of ``major``, ``minor``, ``patch``,
+``/orcobot merge`` optionally followed by one of ``major``, ``minor``, ``patch``,
 can be used to ask the bot to the following:
 
 * rebase the PR on the target branch

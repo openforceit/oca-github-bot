@@ -6,7 +6,7 @@ import re
 ODOO_VERSION_RE = re.compile(r"^(?P<major>\d+)\.(?P<minor>\d+)$")
 MERGE_BOT_BRANCH_RE = re.compile(
     r"(?P<target_branch>\S+)"
-    r"-ocabot-merge"
+    r"-orcobot-merge"
     r"-pr-(?P<pr>\d+)"
     r"-by-(?P<username>\S+)"
     r"-bump-(?P<bumpversion>(no|patch|minor|major))"
@@ -46,7 +46,7 @@ def parse_merge_bot_branch(branch):
 def make_merge_bot_branch(pr, target_branch, username, bumpversion):
     if not bumpversion:
         bumpversion = "no"
-    return f"{target_branch}-ocabot-merge-pr-{pr}-by-{username}-bump-{bumpversion}"
+    return f"{target_branch}-orcobot-merge-pr-{pr}-by-{username}-bump-{bumpversion}"
 
 
 def search_merge_bot_branch(text):
