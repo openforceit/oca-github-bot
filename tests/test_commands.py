@@ -3,7 +3,7 @@
 
 import pytest
 
-from orca_bot.commands import (
+from orco_bot.commands import (
     InvalidCommandError,
     InvalidOptionsError,
     parse_commands,

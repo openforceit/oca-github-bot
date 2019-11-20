@@ -4,7 +4,7 @@
 import os
 import subprocess
 
-from orca_bot.build_wheels import build_and_publish_wheels
+from orco_bot.build_wheels import build_and_publish_wheels
 
 
 def _make_addon(addons_dir, addon_name, series):

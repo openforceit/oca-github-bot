@@ -4,7 +4,7 @@
 import re
 import subprocess
 
-from orca_bot.github import git_get_current_branch, git_get_head_sha
+from orco_bot.github import git_get_current_branch, git_get_head_sha
 
 
 def test_git_get_head_sha(git_clone):

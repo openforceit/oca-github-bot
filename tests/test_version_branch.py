@@ -1,7 +1,7 @@
 # Copyright (c) ACSONE SA/NV 2018
 # Distributed under the MIT License (http://opensource.org/licenses/MIT).
 
-from orca_bot.version_branch import (
+from orco_bot.version_branch import (
     is_main_branch_bot_branch,
     is_merge_bot_branch,
     is_protected_branch,
