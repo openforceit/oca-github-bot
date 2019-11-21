@@ -108,7 +108,8 @@ def _merge_bot_merge_pr(org, repo, merge_bot_branch, cwd, dry_run=False):
         # TODO msgmerge and commit
         if bumpversion:
             bump_manifest_version(addon_dir, bumpversion, git_commit=True)
-            build_and_check_wheel(addon_dir)
+            if SIMPLE_INDEX_ROOT:
+                build_and_check_wheel(addon_dir)
     if dry_run:
         _logger.info(f"DRY-RUN git push in {org}/{repo}@{target_branch}")
     else:
