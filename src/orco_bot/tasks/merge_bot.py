@@ -128,7 +128,7 @@ def _merge_bot_merge_pr(org, repo, merge_bot_branch, cwd, dry_run=False):
         github.gh_call(
             gh_pr.create_comment,
             f"Congratulations, your PR was merged at {merge_sha}. "
-            f"Thanks a lot for contributing to {org}. ❤️",
+            f"Thanks a lot for making Openforce better. ❤️",
         )
         gh_issue = github.gh_call(gh_pr.issue)
         if dry_run:
