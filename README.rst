@@ -79,13 +79,14 @@ Commands
 One can ask the bot to perform some tasks by entering special commands
 as merge request comments.
 
-``/orcobot merge`` optionally followed by one of ``major``, ``minor``, ``patch``,
-can be used to ask the bot to the following:
+``/orcobot merge`` followed by one of ``major``, ``minor``, ``patch`` or ``nobump``
+can be used to ask the bot to do the following:
 
-* rebase the PR on the target branch
-* run the main branch operations (see above) on it
-* optionally bump the version number of the addons modified by the PR
+* merge the PR onto a temporary branch created off the target branch
 * merge when tests on the rebased branch are green
+* optionally bump the version number of the addons modified by the PR
+* when the version was bumped, udate the changelog with ``oca-towncrier``
+* run the main branch operations (see above) on it
 * when the version was bumped, generate a wheel and rsync it to the PEP 503
   simple index
 
@@ -125,6 +126,8 @@ based on `environment.sample <./environment.sample>`_.
 Tasks performed by the bot can be specified by setting the ``BOT_TASKS``
 variable. This is useful if you want to use this bot for your own GitHub
 organisation.
+
+You can also disable a selection of tasks, using ``BOT_TASKS_DISABLED``.
 
 Using docker-compose
 --------------------
@@ -203,6 +206,7 @@ Contributors
 * Laurent Mignon <laurent.mignon@acsone.eu>
 * Jose Angel Fentanez <joseangel@vauxoo.com>
 * Simone Rubino <simone.rubino@agilebg.com>
+* Sylvain Le Gal (https://twitter.com/legalsylvain)
 
 Maintainers
 ===========
