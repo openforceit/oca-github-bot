@@ -15,6 +15,8 @@ from ..config import (
 )
 from ..manifest import (
     bump_manifest_version,
+    bump_version,
+    get_manifest,
     git_modified_addon_dirs,
     is_addon_dir,
     is_maintainer,
@@ -27,6 +29,7 @@ from .main_branch_bot import main_branch_bot_actions
 _logger = getLogger(__name__)
 
 LABEL_MERGED = "merged 🎉"
+LABEL_MERGING = "bot is merging ⏳"
 
 
 class MergeStrategy(Enum):
@@ -50,13 +53,50 @@ def _git_delete_branch(remote, branch, cwd):
             raise
 
 
+def _remove_merging_label(github, gh_pr, dry_run=False):
+    gh_issue = github.gh_call(gh_pr.issue)
+    labels = [l.name for l in gh_issue.labels()]
+    if LABEL_MERGING in labels:
+        if dry_run:
+            _logger.info(f"DRY-RUN remove {LABEL_MERGING} label from PR {gh_pr.url}")
+        else:
+            _logger.info(f"remove {LABEL_MERGING} label from PR {gh_pr.url}")
+            github.gh_call(gh_issue.remove_label, LABEL_MERGING)
+
+
 def _get_merge_bot_intro_message():
     i = random.randint(0, len(MERGE_BOT_INTRO_MESSAGES) - 1)
     return MERGE_BOT_INTRO_MESSAGES[i]
 
 
+@switchable("merge_bot_towncrier")
+def _merge_bot_towncrier(org, repo, target_branch, addon_dirs, bumpversion_mode, cwd):
+    for addon_dir in addon_dirs:
+        # Run oca-towncrier: this updates and git add readme/HISTORY.rst
+        # if readme/newsfragments contains files and does nothing otherwise.
+        _logger.info(f"oca-towncrier {org}/{repo}@{target_branch} for {addon_dirs}")
+        version = bump_version(get_manifest(addon_dir)["version"], bumpversion_mode)
+        check_call(
+            [
+                "oca-towncrier",
+                "--org",
+                org,
+                "--repo",
+                repo,
+                "--addon-dir",
+                addon_dir,
+                "--version",
+                version,
+                "--commit",
+            ],
+            cwd=cwd,
+        )
+
+
 def _merge_bot_merge_pr(org, repo, merge_bot_branch, cwd, dry_run=False):
-    pr, target_branch, username, bumpversion = parse_merge_bot_branch(merge_bot_branch)
+    pr, target_branch, username, bumpversion_mode = parse_merge_bot_branch(
+        merge_bot_branch
+    )
     # first check if the merge bot branch is still on top of the target branch
     check_call(["git", "checkout", target_branch], cwd=cwd)
     r = call(
@@ -75,7 +115,7 @@ def _merge_bot_merge_pr(org, repo, merge_bot_branch, cwd, dry_run=False):
             repo,
             pr,
             username,
-            bumpversion,
+            bumpversion_mode,
             dry_run=dry_run,
             intro_message=intro_message,
         )
@@ -94,8 +134,6 @@ def _merge_bot_merge_pr(org, repo, merge_bot_branch, cwd, dry_run=False):
     # Do not run the main branch bot if there are no modified addons,
     # because it is dedicated to addons repos.
     check_call(["git", "checkout", merge_bot_branch], cwd=cwd)
-    if modified_addon_dirs:
-        main_branch_bot_actions(org, repo, target_branch, cwd=cwd)
 
     # remove not installable addons (case where an addons becomes no more
     # installable).
@@ -103,13 +141,31 @@ def _merge_bot_merge_pr(org, repo, merge_bot_branch, cwd, dry_run=False):
         d for d in modified_addon_dirs if is_addon_dir(d, installable_only=True)
     ]
 
+    # update HISTORY.rst using towncrier, before generating README.rst
+    if bumpversion_mode != "nobump":
+        _merge_bot_towncrier(
+            org,
+            repo,
+            target_branch,
+            modified_installable_addon_dirs,
+            bumpversion_mode,
+            cwd,
+        )
+
+    if modified_addon_dirs:
+        # this includes setup.py and README.rst generation
+        main_branch_bot_actions(org, repo, target_branch, cwd=cwd)
+
     for addon_dir in modified_installable_addon_dirs:
         # TODO wlc lock and push
         # TODO msgmerge and commit
-        if bumpversion:
-            bump_manifest_version(addon_dir, bumpversion, git_commit=True)
-            if SIMPLE_INDEX_ROOT:
-                build_and_check_wheel(addon_dir)
+        if bumpversion_mode != "nobump":
+            # bumpversion is last commit (after readme generation etc
+            # and before building wheel),
+            # so setuptools-odoo generates a round version number
+            # (without .dev suffix).
+            bump_manifest_version(addon_dir, bumpversion_mode, git_commit=True)
+            build_and_check_wheel(addon_dir)
     if dry_run:
         _logger.info(f"DRY-RUN git push in {org}/{repo}@{target_branch}")
     else:
@@ -118,7 +174,11 @@ def _merge_bot_merge_pr(org, repo, merge_bot_branch, cwd, dry_run=False):
             ["git", "push", "origin", f"{merge_bot_branch}:{target_branch}"], cwd=cwd
         )
     # build and publish wheel
-    if bumpversion and modified_installable_addon_dirs and SIMPLE_INDEX_ROOT:
+    if (
+        bumpversion_mode != "nobump"
+        and modified_installable_addon_dirs
+        and SIMPLE_INDEX_ROOT
+    ):
         for addon_dir in modified_installable_addon_dirs:
             build_and_publish_wheel(addon_dir, SIMPLE_INDEX_ROOT, dry_run)
     # TODO wlc unlock modified_addons
@@ -132,6 +192,7 @@ def _merge_bot_merge_pr(org, repo, merge_bot_branch, cwd, dry_run=False):
             f"Thanks a lot for making Openforce better. ❤️",
         )
         gh_issue = github.gh_call(gh_pr.issue)
+        _remove_merging_label(github, gh_pr, dry_run=dry_run)
         if dry_run:
             _logger.info(f"DRY-RUN add {LABEL_MERGED} label to PR {gh_pr.url}")
         else:
@@ -188,7 +249,7 @@ def merge_bot_start(
     repo,
     pr,
     username,
-    bumpversion=None,
+    bumpversion_mode,
     dry_run=False,
     intro_message=None,
     merge_strategy=MergeStrategy.merge,
@@ -197,7 +258,7 @@ def merge_bot_start(
         gh_pr = gh.pull_request(org, repo, pr)
         target_branch = gh_pr.base.ref
         merge_bot_branch = make_merge_bot_branch(
-            pr, target_branch, username, bumpversion
+            pr, target_branch, username, bumpversion_mode
         )
         pr_branch = f"tmp-pr-{pr}"
         try:
@@ -264,6 +325,10 @@ def merge_bot_start(
                 f"of exception {e}.",
             )
             raise
+        else:
+            gh_issue = github.gh_call(gh_pr.issue)
+            _logger.info(f"add {LABEL_MERGED} label to PR {gh_pr.url}")
+            github.gh_call(gh_issue.add_labels, LABEL_MERGING)
 
         # FIXME This triggers a fake green light only to trigger the webhook(s)
         # that actually do the real merge. This should be replaced by a proper
@@ -359,6 +424,7 @@ def merge_bot_status(org, repo, merge_bot_branch, sha):
                         f"finalized, because "
                         f"command `{cmd}` failed with output:\n```\n{e.output}\n```",
                     )
+                    _remove_merging_label(github, gh_pr)
                     raise
                 except Exception as e:
                     github.gh_call(
@@ -366,6 +432,7 @@ def merge_bot_status(org, repo, merge_bot_branch, sha):
                         f"@{username} The merge process could not be "
                         f"finalized because an exception was raised: {e}.",
                     )
+                    _remove_merging_label(github, gh_pr)
                     raise
             else:
                 github.gh_call(
@@ -381,3 +448,4 @@ def merge_bot_status(org, repo, merge_bot_branch, sha):
                 check_call(
                     ["git", "push", "origin", f":{merge_bot_branch}"], cwd=clone_dir
                 )
+                _remove_merging_label(github, gh_pr)

@@ -29,14 +29,43 @@ ODOO_PASSWORD=
 
 #SENTRY_DSN=
 
+# Number of approvals to have the proposal marked as "Approved"
+#APPROVALS_REQUIRED=2
+# Number of days before the proposal can be marked as "Approved"
+#MIN_PR_AGE=5
+
 # Coma separated list of task to run
 # By default all configured tasks are run.
 # Available tasks:
 #  delete_branch,tag_approved,tag_ready_to_merge,gen_addons_table,
 #  gen_addons_readme,gen_addons_icon,setuptools_odoo,mention_maintainer,
-#  merge_bot,tag_needs_review
+#  merge_bot,merge_bot_towncrier,tag_needs_review
 #BOT_TASKS=all
+
+# Coma separated list of task to ignore
+#BOT_TASKS_DISABLED=
+
+# Coma separated list of github status to ignore
+#GITHUB_STATUS_IGNORED=ci/runbot,codecov/project,codecov/patch,coverage/coveralls
+
+# Coma separated list of github Check suites to ignore
+#GITHUB_CHECK_SUITES_IGNORED=Codecov
 
 # Root of the PEP 503 simple index where wheels are published
 # (publishing disabled if empty)
 SIMPLE_INDEX_ROOT=/app/run/simple-index
+
+# Space separated list of extra arguments, for the calls of the
+# following command
+# * oca-gen-addons-table
+# * oca-gen-addon-readme
+# * oca-gen-addon-icon
+# Exemple : GEN_ADDON_README_EXTRA_ARGS=--no-gen-html
+#GEN_ADDONS_TABLE_EXTRA_ARGS=
+#GEN_ADDON_README_EXTRA_ARGS=
+#GEN_ADDON_ICON_EXTRA_ARGS=
+
+# Text displayed on github, as a comment,
+# if a user has entered a wrong command
+#OCABOT_USAGE=
+#OCABOT_EXTRA_DOCUMENTATION=

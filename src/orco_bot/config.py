@@ -16,7 +16,9 @@ def switchable(switch_name=None):
             if switch_name is None:
                 sname = func.__name__
 
-            if BOT_TASKS != ["all"] and sname not in BOT_TASKS:
+            if (
+                BOT_TASKS != ["all"] and sname not in BOT_TASKS
+            ) or sname in BOT_TASKS_DISABLED:
                 _logger.debug("Method %s skipped (Disabled by config)", sname)
                 return
             return func(*args, **kwargs)
@@ -47,20 +49,37 @@ SENTRY_DSN = os.environ.get("SENTRY_DSN")
 
 DRY_RUN = os.environ.get("DRY_RUN", "").lower() in ("1", "true", "yes")
 
-# Coma separated list of task to run
-# By default all configured tasks are run.
-# Available tasks:
-#  delete_branch,tag_approved,tag_ready_to_merge,gen_addons_table,
-#  gen_addons_readme,gen_addons_icon,setuptools_odoo,merge_bot,tag_needs_review
 BOT_TASKS = os.environ.get("BOT_TASKS", "all").split(",")
 
-GITHUB_STATUS_IGNORED = [
-    "ci/runbot",
-    "codecov/project",
-    "codecov/patch",
-    "coverage/coveralls",
-]
-GITHUB_CHECK_SUITES_IGNORED = ["Codecov"]
+BOT_TASKS_DISABLED = os.environ.get("BOT_TASKS_DISABLED", "").split(",")
+
+GEN_ADDONS_TABLE_EXTRA_ARGS = (
+    os.environ.get("GEN_ADDONS_TABLE_EXTRA_ARGS", "")
+    and os.environ.get("GEN_ADDONS_TABLE_EXTRA_ARGS").split(" ")
+    or []
+)
+
+GEN_ADDON_README_EXTRA_ARGS = (
+    os.environ.get("GEN_ADDON_README_EXTRA_ARGS", "")
+    and os.environ.get("GEN_ADDON_README_EXTRA_ARGS").split(" ")
+    or []
+)
+
+GEN_ADDON_ICON_EXTRA_ARGS = (
+    os.environ.get("GEN_ADDON_ICON_EXTRA_ARGS", "")
+    and os.environ.get("GEN_ADDON_ICON_EXTRA_ARGS").split(" ")
+    or []
+)
+
+GITHUB_STATUS_IGNORED = os.environ.get(
+    "GITHUB_STATUS_IGNORED",
+    "ci/runbot,codecov/project,codecov/patch,coverage/coveralls",
+).split(",")
+
+GITHUB_CHECK_SUITES_IGNORED = os.environ.get(
+    "GITHUB_CHECK_SUITES_IGNORED", "Codecov,Dependabot"
+).split(",")
+
 MERGE_BOT_INTRO_MESSAGES = [
     "On my way to merge this fuckin PR, bitch!",
     "Let's merge this awesome bunch of brand new bugs!",
@@ -95,4 +114,21 @@ MERGE_BOT_INTRO_MESSAGES = [
     "A merge please. Shaken, not stirred.",
 ]
 
+APPROVALS_REQUIRED = int(os.environ.get("APPROVALS_REQUIRED", "2"))
+MIN_PR_AGE = int(os.environ.get("MIN_PR_AGE", "5"))
+
 SIMPLE_INDEX_ROOT = os.environ.get("SIMPLE_INDEX_ROOT")
+
+OCABOT_USAGE = os.environ.get(
+    "OCABOT_USAGE",
+    "**Ocabot commands**\n" "* ``ocabot merge major|minor|patch|nobump``",
+)
+
+OCABOT_EXTRA_DOCUMENTATION = os.environ.get(
+    "OCABOT_EXTRA_DOCUMENTATION",
+    "**More information**\n"
+    " * [ocabot documentation](https://github.com/OCA/oca-github-bot/#commands)\n"
+    " * [OCA guidelines](https://github.com/OCA/odoo-community.org/blob/master/"
+    "website/Contribution/CONTRIBUTING.rst), "
+    'specially the "Version Numbers" section.',
+)

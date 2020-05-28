@@ -1,3 +1,52 @@
+20200415
+~~~~~~~~
+
+**Features**
+
+- Make ``bumpversion_mode`` option required on ``merge`` command, adding ``nobump`` option that was before implicit.
+  Bot adds comment on github, if the command is wrong. Message are customizable in the ``environment`` file. (`#90 <https://github.com/oca/oca-github-bot/issues/90>`_)
+- Make ``GITHUB_STATUS_IGNORED`` and ``GITHUB_CHECK_SUITES_IGNORED`` configurable. (`#111 <https://github.com/oca/oca-github-bot/issues/111>`_)
+- Add ``BOT_TASKS_DISABLED``. (`#112 <https://github.com/oca/oca-github-bot/issues/112>`_)
+
+
+20200328
+~~~~~~~~
+
+**Features**
+
+- ocabot merge: add a "bot is merging ⏳" PR label during the test
+  and merge operation. (`#73 <https://github.com/oca/oca-github-bot/issues/73>`_)
+- Add three new settings available in the ``environment`` file that allow to add
+  extra argument, when calling the libraries ``oca-gen-addons-table``,
+  ``oca-gen-addon-readme`` and ``oca-gen-addon-icon``. (`#103
+  <https://github.com/oca/oca-github-bot/issues/103>`_)
+- Make the "ocabot merge" command update ``HISTORY.rst`` from news fragments in
+  ``readme/newsfragments`` using `towncrier
+  <https://pypi.org/project/towncrier/>`_. (`#106
+  <https://github.com/oca/oca-github-bot/issues/106>`_)
+- Add ``APPROVALS_REQUIRED`` and ``MIN_PR_AGE`` configuration options to
+  control the conditions to set the ``Approved`` label. (`#107
+  <https://github.com/oca/oca-github-bot/issues/107>`_)
+
+
+20191226
+~~~~~~~~
+
+**Bug fixes**
+
+- do not fail on ``twine check`` when an addon has no ``setup.py``
+  `#96 <https://github.com/OCA/oca-github-bot/pull/96>`_
+
+20191126
+~~~~~~~~
+
+**Bug fixes**
+
+- do not mention maintainers when they open PR to module they maintain
+  `#92 <https://github.com/OCA/oca-github-bot/pull/92>`_
+- do not mention maintainers more than once
+  `#91 <https://github.com/OCA/oca-github-bot/pull/91>`_
+
 20191027
 ~~~~~~~~
 
