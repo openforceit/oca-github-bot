@@ -94,7 +94,7 @@ MERGE_BOT_INTRO_MESSAGES = [
     "HERE'S JOHNNY!",
     "A merge please. Shaken, not stirred.",
     "I'll do it. Sicchè!",
-    "Is this a PR? Frechte!!!",
+    "Is this a PR? Freechete!!!",
 ]
 
 SIMPLE_INDEX_ROOT = os.environ.get("SIMPLE_INDEX_ROOT")
